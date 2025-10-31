@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 
-export default function StrategiesPanel({ strategies, summary }) {
+export default function StrategiesPanel({ strategies, summary, isAnalyzed }) {
   const pdfRef = useRef(null)
 
   const downloadPDF = async () => {
@@ -15,8 +15,8 @@ export default function StrategiesPanel({ strategies, summary }) {
     const pageHeight = pdf.internal.pageSize.getHeight()
     const imgProps = pdf.getImageProperties(imgData)
     const imgHeight = (imgProps.height * pageWidth) / imgProps.width
-    let y = 10
 
+    let y = 10
     if (imgHeight < pageHeight) {
       pdf.addImage(imgData, 'PNG', 10, y, pageWidth - 20, imgHeight)
     } else {
@@ -30,17 +30,22 @@ export default function StrategiesPanel({ strategies, summary }) {
     pdf.save('business-report.pdf')
   }
 
-  // ✨ Default strategies when no data is provided
+  // Default strategies to show only after Analyze
   const defaultSummary =
-    "Our AI-driven analysis highlights opportunities to strengthen product engagement, optimize discount strategies, and elevate customer satisfaction."
+    "Based on product insights, key opportunities have been identified to enhance customer satisfaction, strengthen sales performance, and optimize pricing impact."
 
   const defaultStrategies = [
-    " Focus marketing on high-rated products (⭐ 4.5+) to increase conversion and trust.",
-    " Introduce dynamic discounting — analyze demand and set flexible discount ranges.",
-    " Use customer reviews to identify feature requests and product improvement areas.",
-    " Bundle low-performing products with top-sellers to drive visibility and sales.",
-    " Launch a loyalty or referral program to boost retention and organic reach."
+    "🎯 Focus marketing on high-rated (⭐ 4.5+) and high-selling products to boost trust and conversion.",
+    "📊 Implement dynamic pricing to align discounts with seasonal or demand-based trends.",
+    "💡 Use sentiment analysis of reviews to identify product improvement opportunities.",
+    "🚀 Promote underperforming products through combo deals or social media influencer campaigns.",
+    "🤝 Introduce loyalty rewards or early-access benefits to improve long-term customer retention."
   ]
+
+  // Show only after user clicks “Analyze”
+  if (!isAnalyzed) {
+    return null
+  }
 
   const activeSummary = summary || defaultSummary
   const activeStrategies = strategies?.length ? strategies : defaultStrategies
