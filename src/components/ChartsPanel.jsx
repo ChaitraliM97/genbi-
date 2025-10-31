@@ -36,7 +36,6 @@ export default function ChartsPanel({ loading, charts, stats, plotlyCharts }) {
       {charts && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ImgChart title="Histogram" b64={charts.histogram} />
-          <ImgChart title="Correlation Heatmap" b64={charts.correlation_heatmap} />
           <ImgChart title="Trend Line" b64={charts.trend_line} />
           <ImgChart title="Top Categories" b64={charts.bar_categorical} />
           <ImgChart title="Proportions" b64={charts.pie_proportions} />
@@ -45,7 +44,6 @@ export default function ChartsPanel({ loading, charts, stats, plotlyCharts }) {
       {plotlyCharts && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PlotCard title="Histogram" cfg={plotlyCharts.histogram} />
-          <PlotCard title="Correlation Heatmap" cfg={plotlyCharts.correlation_heatmap} />
           <PlotCard title="Trend Line" cfg={plotlyCharts.trend_line} />
           <PlotCard title="Top Categories" cfg={plotlyCharts.bar_categorical} />
           <PlotCard title="Proportions" cfg={plotlyCharts.pie_proportions} />
@@ -54,5 +52,6 @@ export default function ChartsPanel({ loading, charts, stats, plotlyCharts }) {
     </div>
   )
 }
+
 
 
