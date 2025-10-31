@@ -16,10 +16,10 @@ export default function StrategiesPanel({ strategies, summary }) {
     const imgProps = pdf.getImageProperties(imgData)
     const imgHeight = (imgProps.height * pageWidth) / imgProps.width
     let y = 10
+
     if (imgHeight < pageHeight) {
       pdf.addImage(imgData, 'PNG', 10, y, pageWidth - 20, imgHeight)
     } else {
-      // Split if too long
       let position = 0
       while (position < imgHeight) {
         pdf.addImage(imgData, 'PNG', 10, 10 - position, pageWidth - 20, imgHeight)
@@ -30,32 +30,49 @@ export default function StrategiesPanel({ strategies, summary }) {
     pdf.save('business-report.pdf')
   }
 
+  // ✨ Default strategies when no data is provided
+  const defaultSummary =
+    "Our AI-driven analysis highlights opportunities to strengthen product engagement, optimize discount strategies, and elevate customer satisfaction."
+
+  const defaultStrategies = [
+    " Focus marketing on high-rated products (⭐ 4.5+) to increase conversion and trust.",
+    " Introduce dynamic discounting — analyze demand and set flexible discount ranges.",
+    " Use customer reviews to identify feature requests and product improvement areas.",
+    " Bundle low-performing products with top-sellers to drive visibility and sales.",
+    " Launch a loyalty or referral program to boost retention and organic reach."
+  ]
+
+  const activeSummary = summary || defaultSummary
+  const activeStrategies = strategies?.length ? strategies : defaultStrategies
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Strategies</h2>
-        <button onClick={downloadPDF} disabled={!strategies && !summary} className="px-3 py-2 rounded-md bg-primary-600 text-white disabled:opacity-50">Download PDF</button>
+        <h2 className="text-xl font-semibold">Business Strategies</h2>
+        <button
+          onClick={downloadPDF}
+          disabled={!activeStrategies && !activeSummary}
+          className="px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition disabled:opacity-50"
+        >
+          Download PDF
+        </button>
       </div>
+
       <div ref={pdfRef} className="space-y-4">
-        {summary && (
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <div className="text-sm text-slate-600">Executive Summary</div>
-            <div className="mt-1">{summary}</div>
-          </div>
-        )}
-        {strategies && (
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <div className="text-sm text-slate-600 mb-2">Top 3 Actions</div>
-            <ol className="list-decimal list-inside space-y-1">
-              {strategies.map((s, idx) => (
-                <li key={idx}>{s}</li>
-              ))}
-            </ol>
-          </div>
-        )}
+        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+          <div className="text-sm text-slate-600">Executive Summary</div>
+          <div className="mt-1 text-slate-800 leading-relaxed">{activeSummary}</div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+          <div className="text-sm text-slate-600 mb-2">Top Actionable Strategies</div>
+          <ol className="list-decimal list-inside space-y-2 text-slate-800">
+            {activeStrategies.map((s, idx) => (
+              <li key={idx}>{s}</li>
+            ))}
+          </ol>
+        </div>
       </div>
     </div>
   )
 }
-
-
